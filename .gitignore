@@ -1,0 +1,10 @@
+# Compiled binary (built locally or in CI; attached to GitHub Releases as an asset).
+/herdr-confirm-close
+herdr-confirm-close-darwin-*
+herdr-confirm-close-linux-*
+
+# Release staging
+/dist/
+
+# macOS
+.DS_Store

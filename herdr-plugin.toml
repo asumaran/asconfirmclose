@@ -1,0 +1,33 @@
+id = "asumaran.confirm-close"
+name = "confirm-close"
+version = "0.1.0"
+min_herdr_version = "0.7.5"
+description = "Close the focused pane, asking first only when a process is running in it"
+platforms = ["linux", "macos"]
+
+# Hybrid provisioning: download the prebuilt binary from the GitHub release
+# matching `version` above; fall back to `go build` when there is no asset for
+# this platform (then a Go toolchain is required).
+[[build]]
+command = ["scripts/fetch-binary.sh"]
+
+# Bind this action to your close-pane key (and clear the built-in binding):
+#   [keys]
+#   close_pane = []
+#   [[keys.command]]
+#   key = "prefix+x"
+#   type = "plugin_action"
+#   command = "asumaran.confirm-close.close"
+[[actions]]
+id = "close"
+title = "Close pane (confirm if busy)"
+contexts = ["pane"]
+command = ["./herdr-confirm-close", "close"]
+
+# Confirmation popup, opened by the action only when the pane is busy. Size is
+# passed at open time (config.json "popup" overrides the defaults).
+[[panes]]
+id = "confirm"
+title = "Close pane?"
+placement = "popup"
+command = ["./herdr-confirm-close", "prompt"]
