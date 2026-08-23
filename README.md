@@ -14,6 +14,8 @@ long test run…) asks first.
   y close    n / esc keep
 ```
 
+![confirm-close demo: an idle pane closes at once, a pane running vim asks first](docs/demo.gif)
+
 Herdr's built-in `ui.confirm_close` only guards workspaces and worktree
 groups; `prefix+x` on a pane is immediate. This plugin fills that gap without
 nagging you every time you close an empty shell.
@@ -127,6 +129,13 @@ herdr plugin link "$PWD"                 # link does NOT run [[build]]; build yo
 - Tests cover the classification rules, the config file, the CLI contract
   against a fake `herdr`, the popup model, and an end-to-end run of the built
   binary. `go test ./...` needs no running herdr.
+
+## Demo recording
+
+`docs/demo.gif` is recorded with
+[herdr-demokit](https://github.com/asumaran/herdr-demokit): `herdr-demo
+record` from the repo root replays `scripts/demo/keys.json` against an
+isolated herdr session described by `scripts/demo/scenario.sh`.
 
 ## Releasing
 

@@ -33,6 +33,11 @@ Tea + lipgloss (fixed ANSI colors, no adaptive colors). Files by concern:
 - `ui.go` — `promptModel` (Bubble Tea), `runPrompt`.
 - `scripts/fetch-binary.sh` — `[[build]]`: download release asset or
   `go build`. `scripts/release.sh` — tag + GitHub release.
+- `scripts/demo/` — the demo scenario (`scenario.sh` + `keys.json`) that
+  `herdr-demo record` (asumaran/herdr-demokit, the recording tool shared by
+  the herdr plugins) uses to re-record `docs/demo.gif`; see
+  `scripts/demo/README.md`. Uses a disposable herdr session
+  (`confirmclosedemo`), never the user's default session.
 - `.github/workflows/ci.yml` (gofmt/vet/test on push and PR) and
   `release.yml` (cross-compile and upload assets on release publish).
 
