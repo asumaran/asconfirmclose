@@ -1,3 +1,7 @@
+## v0.3.1 (2026-09-19)
+
+* ci: share the release process with the rest of the family (4366fb9)
+
 ## v0.3.0 (2026-09-19)
 
 * refactor: rename herdr-confirm-close to asconfirmclose (ac41b1f)
