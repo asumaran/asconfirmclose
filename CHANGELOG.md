@@ -1,3 +1,7 @@
+## v0.3.0 (2026-09-19)
+
+* refactor: rename herdr-confirm-close to asconfirmclose (ac41b1f)
+
 ## v0.2.0 (2026-09-18)
 
 * fix(release): pass a tag message so signed tags work headless (f409f56)
