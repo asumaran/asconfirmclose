@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# release.sh — cut a new herdr-confirm-close release, gated on a clean tree and a green
+# release.sh — cut a new asconfirmclose release, gated on a clean tree and a green
 # vet+build+test.
 #
 # Releases are created from a tag: a GitHub Actions workflow then compiles the

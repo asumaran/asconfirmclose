@@ -1,6 +1,6 @@
 #!/bin/sh
 # fetch-binary.sh — the plugin's [[build]] command: provision the
-# ./herdr-confirm-close binary without requiring a Go toolchain.
+# ./asconfirmclose binary without requiring a Go toolchain.
 #
 # Downloads the prebuilt binary attached to the GitHub release matching the
 # manifest's version (so an install pinned with --ref gets the binary that
@@ -9,9 +9,9 @@
 # fails. Exits non-zero only when neither path works, which aborts the plugin
 # install.
 #
-# Set HERDR_CONFIRM_CLOSE_BUILD_FROM_SOURCE=1 to skip the download and always
+# Set ASCONFIRMCLOSE_BUILD_FROM_SOURCE=1 to skip the download and always
 # compile locally (for users who prefer not to run prebuilt binaries):
-#   HERDR_CONFIRM_CLOSE_BUILD_FROM_SOURCE=1 herdr plugin install asumaran/herdr-confirm-close
+#   ASCONFIRMCLOSE_BUILD_FROM_SOURCE=1 herdr plugin install asumaran/asconfirmclose
 set -eu
 
 cd "$(dirname "$0")/.."
@@ -33,16 +33,16 @@ case "$(uname -m)" in
   *)               ARCH="" ;;
 esac
 
-URL="https://github.com/asumaran/herdr-confirm-close/releases/download/v${VERSION}/herdr-confirm-close-${OS}-${ARCH}"
+URL="https://github.com/asumaran/asconfirmclose/releases/download/v${VERSION}/asconfirmclose-${OS}-${ARCH}"
 
-if [ "${HERDR_CONFIRM_CLOSE_BUILD_FROM_SOURCE:-0}" = "1" ]; then
-  echo "fetch-binary: HERDR_CONFIRM_CLOSE_BUILD_FROM_SOURCE=1, skipping release download"
+if [ "${ASCONFIRMCLOSE_BUILD_FROM_SOURCE:-0}" = "1" ]; then
+  echo "fetch-binary: ASCONFIRMCLOSE_BUILD_FROM_SOURCE=1, skipping release download"
 elif [ -n "$OS" ] && [ -n "$ARCH" ] && command -v curl >/dev/null 2>&1; then
   tmp="$(mktemp)"
   if curl -fsSL --retry 2 -o "$tmp" "$URL"; then
     chmod +x "$tmp"
-    mv "$tmp" herdr-confirm-close
-    echo "fetch-binary: installed herdr-confirm-close-${OS}-${ARCH} from release v${VERSION}"
+    mv "$tmp" asconfirmclose
+    echo "fetch-binary: installed asconfirmclose-${OS}-${ARCH} from release v${VERSION}"
     exit 0
   fi
   rm -f "$tmp"
@@ -50,8 +50,8 @@ elif [ -n "$OS" ] && [ -n "$ARCH" ] && command -v curl >/dev/null 2>&1; then
 fi
 
 if command -v go >/dev/null 2>&1; then
-  go build -ldflags "-X main.version=v${VERSION}-source" -o herdr-confirm-close .
-  echo "fetch-binary: built herdr-confirm-close from source (v${VERSION}-source)"
+  go build -ldflags "-X main.version=v${VERSION}-source" -o asconfirmclose .
+  echo "fetch-binary: built asconfirmclose from source (v${VERSION}-source)"
   exit 0
 fi
 

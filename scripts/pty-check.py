@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
 """End-to-end check of the confirmation popup without a real terminal.
 
-Spawns `herdr-confirm-close prompt` on a pty the size of the popup, answers
+Spawns `asconfirmclose prompt` on a pty the size of the popup, answers
 the terminal queries bubbletea sends, replays a key and asserts on the frame
 rendered with pyte and on what was asked of herdr. herdr is a logging stub
 (HERDR_BIN_PATH), so no pane is ever closed and no server is contacted.
 
-Usage: scripts/pty-check.py ./herdr-confirm-close   (needs python3 + pyte)
+Usage: scripts/pty-check.py ./asconfirmclose   (needs python3 + pyte)
 """
-NAME, ROWS, COLS = "confirm-close", 9, 64
+NAME, ROWS, COLS = "asconfirmclose", 9, 64
 import atexit, fcntl, json, os, pty, select, shutil, signal, struct, subprocess, sys, tempfile, termios, time
 import pyte
 
@@ -119,7 +119,7 @@ printf '{}'
 
 def session(process="vim", cmdline="vim notes.md", fail=False):
     env = dict(os.environ, TERM="xterm-256color", COLORTERM="truecolor", HOME=home, HERDR_BIN_PATH=herdr,
-               HCC_PANE_ID="w1:p1", HCC_PROCESS=process, HCC_CMDLINE=cmdline)
+               ASCONFIRMCLOSE_PANE_ID="w1:p1", ASCONFIRMCLOSE_PROCESS=process, ASCONFIRMCLOSE_CMDLINE=cmdline)
     env.pop("HERDR_PLUGIN_CONFIG_DIR", None)
     env.pop("STUB_FAIL", None)
     if fail: env["STUB_FAIL"] = "1"
@@ -129,7 +129,7 @@ def session(process="vim", cmdline="vim notes.md", fail=False):
 def calls():
     return open(calls_log).read().splitlines() if os.path.exists(calls_log) else []
 
-print("== herdr-confirm-close pty driver (%dx%d) ==" % (COLS, ROWS))
+print("== asconfirmclose pty driver (%dx%d) ==" % (COLS, ROWS))
 
 # ---------- run 1: n keeps the pane ----------
 s = session()

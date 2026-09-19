@@ -1,4 +1,4 @@
-// herdr-confirm-close is a herdr plugin that closes the focused pane
+// asconfirmclose is a herdr plugin that closes the focused pane
 // immediately when it only holds an idle shell, and asks for confirmation
 // when a process (an agent, a dev server, an editor…) is running in it.
 //
@@ -17,7 +17,7 @@ import (
 var version = "dev"
 
 func usage() {
-	fmt.Fprintf(os.Stderr, `usage: herdr-confirm-close <close|prompt> [flags]
+	fmt.Fprintf(os.Stderr, `usage: asconfirmclose <close|prompt> [flags]
 
   close   inspect the focused pane (HERDR_PANE_ID) and close it, or open the
           confirmation popup when a process is running in it
@@ -33,14 +33,14 @@ func main() {
 }
 
 func run(args []string) int {
-	fs := flag.NewFlagSet("herdr-confirm-close", flag.ContinueOnError)
+	fs := flag.NewFlagSet("asconfirmclose", flag.ContinueOnError)
 	fs.Usage = usage
 	showVersion := fs.Bool("version", false, "print version and exit")
 	if err := fs.Parse(args); err != nil {
 		return 2
 	}
 	if *showVersion {
-		fmt.Println("herdr-confirm-close " + version)
+		fmt.Println("asconfirmclose " + version)
 		return 0
 	}
 	if fs.NArg() != 1 {

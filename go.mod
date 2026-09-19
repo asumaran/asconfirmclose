@@ -1,4 +1,4 @@
-module github.com/asumaran/herdr-confirm-close
+module github.com/asumaran/asconfirmclose
 
 go 1.25.6
 

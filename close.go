@@ -7,13 +7,13 @@ import (
 )
 
 const (
-	pluginID         = "asumaran.confirm-close"
+	pluginID         = "asumaran.asconfirmclose"
 	promptEntrypoint = "confirm"
 
 	// Environment handed to the popup process so it knows what to close.
-	envPaneID  = "HCC_PANE_ID"
-	envProcess = "HCC_PROCESS"
-	envCmdline = "HCC_CMDLINE"
+	envPaneID  = "ASCONFIRMCLOSE_PANE_ID"
+	envProcess = "ASCONFIRMCLOSE_PROCESS"
+	envCmdline = "ASCONFIRMCLOSE_CMDLINE"
 )
 
 // closeOutcome describes what runClose did, for logging and tests.

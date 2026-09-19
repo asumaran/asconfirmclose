@@ -4,13 +4,13 @@ Guidance for working in this repository.
 
 ## What this is
 
-`herdr-confirm-close` is a herdr plugin that replaces the close-pane key. The
+`asconfirmclose` is a herdr plugin that replaces the close-pane key. The
 keybound action inspects the focused pane's foreground job through
 `herdr pane process-info`; if only shells are running it closes the pane at
 once, otherwise it opens a popup naming the process and closes only on `y`.
 It exists because herdr's `ui.confirm_close` covers workspaces, not panes.
 
-Distributed as a herdr plugin (`herdr plugin install asumaran/herdr-confirm-close`;
+Distributed as a herdr plugin (`herdr plugin install asumaran/asconfirmclose`;
 the manifest's `[[build]]` runs `scripts/fetch-binary.sh`). Each GitHub
 Release attaches static binaries for darwin/linux × arm64/amd64. There is no
 published library.
@@ -28,32 +28,32 @@ paths (fixed ANSI colors, no adaptive colors). Files by concern:
 - `classify.go` — shell list, `processDisplayName`, `classify` (busy/idle
   verdict and which process to show).
 - `close.go` — `runClose`: the action's decision flow and the exact
-  `plugin pane open` argv (popup placement, size, `HCC_*` env).
+  `plugin pane open` argv (popup placement, size, `ASCONFIRMCLOSE_*` env).
 - `config.go` — optional `config.json` in `HERDR_PLUGIN_CONFIG_DIR`
   (`ignore` list, popup size), strict decoding, defaults on error.
 - `ui.go` — `promptModel` (Bubble Tea v2), `render`, `runPrompt`.
 - `scripts/fetch-binary.sh` — `[[build]]`: download release asset or
   `go build`. `scripts/release.sh` — tag + GitHub release.
 - `scripts/demo/` — the demo scenario (`scenario.sh` + `keys.json`) that
-  `herdr-demo record` (asumaran/herdr-demokit, the recording tool shared by
+  `asdemo record` (asumaran/asdemokit, the recording tool shared by
   the herdr plugins) uses to re-record `docs/demo.gif`; see
   `scripts/demo/README.md`. Uses a disposable herdr session
-  (`confirmclosedemo`), never the user's default session.
+  (`asconfirmclosedemo`), never the user's default session.
 - `.github/workflows/ci.yml` (gofmt/vet/test on push and PR) and
   `release.yml` (cross-compile and upload assets on release publish).
 
 ## Build & run
 
 ```bash
-go build -o herdr-confirm-close .   # manifest runs ./herdr-confirm-close from the repo root
+go build -o asconfirmclose .   # manifest runs ./asconfirmclose from the repo root
 go vet ./... && go test ./...
-scripts/pty-check.py ./herdr-confirm-close   # end-to-end TUI check on a pty (python3 + pyte)
-herdr plugin link ~/Developer/herdr-confirm-close   # link does NOT run [[build]]
-HERDR_PANE_ID=<pane> ./herdr-confirm-close close    # drive the action by hand
+scripts/pty-check.py ./asconfirmclose   # end-to-end TUI check on a pty (python3 + pyte)
+herdr plugin link ~/Developer/asconfirmclose   # link does NOT run [[build]]
+HERDR_PANE_ID=<pane> ./asconfirmclose close    # drive the action by hand
 ```
 
 Keybinding (user config): `prefix+x` / `ctrl+alt+x` → `plugin_action`
-`asumaran.confirm-close.close`, with `close_pane = []`.
+`asumaran.asconfirmclose.close`, with `close_pane = []`.
 
 ## Behaviour / decisions
 
@@ -65,9 +65,9 @@ Keybinding (user config): `prefix+x` / `ctrl+alt+x` → `plugin_action`
 - **Fail safe**: `process-info` errors other than `pane_not_found` prompt
   instead of closing. A broken `config.json` logs a warning and uses defaults.
 - **Popup contract**: the action opens
-  `plugin pane open --plugin asumaran.confirm-close --entrypoint confirm --placement popup --width W --height H --env HCC_PANE_ID=.. --env HCC_PROCESS=.. [--env HCC_CMDLINE=..]`.
+  `plugin pane open --plugin asumaran.asconfirmclose --entrypoint confirm --placement popup --width W --height H --env ASCONFIRMCLOSE_PANE_ID=.. --env ASCONFIRMCLOSE_PROCESS=.. [--env ASCONFIRMCLOSE_CMDLINE=..]`.
   Popups are session-modal, have no pane id and receive Escape; the popup
-  process reads only the `HCC_*` env. Keep the argv stable; tests assert it.
+  process reads only the `ASCONFIRMCLOSE_*` env. Keep the argv stable; tests assert it.
 - **Keys**: only `y`/`Y` close. Everything else (n, Esc, Enter, q, ctrl+c…)
   keeps the pane. Input is ignored while the close request is in flight; a
   failed close shows the error and any key dismisses it.
@@ -91,12 +91,12 @@ parsing, `execRunner` against a POSIX fake `herdr` script), `ui_test.go`
 `close` action end to end against the fake `herdr`).
 
 For a manual check against real herdr, split a throwaway pane, `herdr pane run
-<pane> "sleep 300"`, then `HERDR_PANE_ID=<pane> ./herdr-confirm-close close`;
-the popup process can be dismissed with `pkill -f 'herdr-confirm-close prompt'`.
+<pane> "sleep 300"`, then `HERDR_PANE_ID=<pane> ./asconfirmclose close`;
+the popup process can be dismissed with `pkill -f 'asconfirmclose prompt'`.
 Never point a manual run at a pane you care about: the idle path really closes
 it.
 
-For end-to-end verification without a TTY, `scripts/pty-check.py ./herdr-confirm-close`
+For end-to-end verification without a TTY, `scripts/pty-check.py ./asconfirmclose`
 (python3 + `pyte`) spawns the binary on a pty, answers the terminal queries,
 replays keystrokes and asserts on pyte-rendered frames, in a throwaway sandbox
 (a logging herdr stub as `HERDR_BIN_PATH`, so no pane is ever closed). The v2 renderer repaints with scroll regions, which pyte ignores, so the
@@ -114,5 +114,5 @@ driver forces a full redraw (pty resize + SIGWINCH) before reading a frame.
 `scripts/release.sh <X.Y.Z>` — clean-tree + vet/build/test gate, CHANGELOG
 generation from commit subjects, manifest version sync, commit + tag + GitHub
 release; CI (`.github/workflows/release.yml`) attaches the platform binaries.
-Releasing never touches the linked plugin's `./herdr-confirm-close`; rebuild
+Releasing never touches the linked plugin's `./asconfirmclose`; rebuild
 locally to keep testing dev code.

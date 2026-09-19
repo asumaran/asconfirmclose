@@ -17,7 +17,7 @@ func buildBinary(t *testing.T) string {
 		t.Skip("end-to-end tests use a POSIX fake herdr")
 	}
 	dir := t.TempDir()
-	bin := filepath.Join(dir, "herdr-confirm-close")
+	bin := filepath.Join(dir, "asconfirmclose")
 	cmd := exec.Command("go", "build", "-o", bin, ".")
 	if out, err := cmd.CombinedOutput(); err != nil {
 		t.Fatalf("go build: %v\n%s", err, out)
@@ -132,7 +132,7 @@ func TestEndToEndCloseAction(t *testing.T) {
 			t.Fatalf("exit %d: %s", code, out)
 		}
 		out, code = runBinary(t, bin, baseEnv, "-version")
-		if code != 0 || !strings.HasPrefix(out, "herdr-confirm-close ") {
+		if code != 0 || !strings.HasPrefix(out, "asconfirmclose ") {
 			t.Fatalf("exit %d: %s", code, out)
 		}
 		out, code = runBinary(t, bin, baseEnv, "prompt")

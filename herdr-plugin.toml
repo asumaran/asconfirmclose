@@ -1,5 +1,5 @@
-id = "asumaran.confirm-close"
-name = "confirm-close"
+id = "asumaran.asconfirmclose"
+name = "asconfirmclose"
 version = "0.2.0"
 min_herdr_version = "0.7.5"
 description = "Close the focused pane, asking first only when a process is running in it"
@@ -17,12 +17,12 @@ command = ["scripts/fetch-binary.sh"]
 #   [[keys.command]]
 #   key = "prefix+x"
 #   type = "plugin_action"
-#   command = "asumaran.confirm-close.close"
+#   command = "asumaran.asconfirmclose.close"
 [[actions]]
 id = "close"
 title = "Close pane (confirm if busy)"
 contexts = ["pane"]
-command = ["./herdr-confirm-close", "close"]
+command = ["./asconfirmclose", "close"]
 
 # Confirmation popup, opened by the action only when the pane is busy. Size is
 # passed at open time (config.json "popup" overrides the defaults).
@@ -30,4 +30,4 @@ command = ["./herdr-confirm-close", "close"]
 id = "confirm"
 title = "Close pane?"
 placement = "popup"
-command = ["./herdr-confirm-close", "prompt"]
+command = ["./asconfirmclose", "prompt"]

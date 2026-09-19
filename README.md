@@ -1,4 +1,4 @@
-# herdr-confirm-close
+# asconfirmclose
 
 A [herdr](https://github.com/herdrdev/herdr) plugin that replaces the
 close-pane key with a smarter one: an idle shell pane closes right away, but a
@@ -14,7 +14,7 @@ long test run…) asks first.
   y close    n / esc keep
 ```
 
-![confirm-close demo: an idle pane closes at once, a pane running vim asks first](docs/demo.gif)
+![asconfirmclose demo: an idle pane closes at once, a pane running vim asks first](docs/demo.gif)
 
 Herdr's built-in `ui.confirm_close` only guards workspaces and worktree
 groups; `prefix+x` on a pane is immediate. This plugin fills that gap without
@@ -30,7 +30,7 @@ nagging you every time you close an empty shell.
 ## Install
 
 ```sh
-herdr plugin install asumaran/herdr-confirm-close
+herdr plugin install asumaran/asconfirmclose
 ```
 
 Then hand the close-pane key to the plugin in your herdr config
@@ -45,17 +45,17 @@ close_pane = []
 [[keys.command]]
 key = "prefix+x"                    # or ["prefix+x", "ctrl+alt+x"], etc.
 type = "plugin_action"
-command = "asumaran.confirm-close.close"
+command = "asumaran.asconfirmclose.close"
 description = "close pane (confirm if busy)"
 ```
 
 Reload with `prefix+shift+r` (or `herdr server reload-config`). Check the
-action is registered with `herdr plugin action list --plugin asumaran.confirm-close`.
+action is registered with `herdr plugin action list --plugin asumaran.asconfirmclose`.
 
 To keep the native close on `prefix+x` and put the confirming one on another
 key, skip the `close_pane = []` line and pick a free key.
 
-Set `HERDR_CONFIRM_CLOSE_BUILD_FROM_SOURCE=1` before `herdr plugin install`
+Set `ASCONFIRMCLOSE_BUILD_FROM_SOURCE=1` before `herdr plugin install`
 if you would rather compile the binary locally than download the release
 asset.
 
@@ -84,7 +84,7 @@ it without confirming leaves everything untouched.
 Optional. Create `config.json` in the plugin's config directory:
 
 ```sh
-herdr plugin config-dir asumaran.confirm-close
+herdr plugin config-dir asumaran.asconfirmclose
 ```
 
 ```json
@@ -116,17 +116,17 @@ keeps working with defaults.
 ## Development
 
 ```sh
-go build -o herdr-confirm-close .        # the manifest runs ./herdr-confirm-close
+go build -o asconfirmclose .        # the manifest runs ./asconfirmclose
 go vet ./... && go test ./...
-scripts/pty-check.py ./herdr-confirm-close   # end-to-end TUI check on a pty (python3 + pyte)
+scripts/pty-check.py ./asconfirmclose   # end-to-end TUI check on a pty (python3 + pyte)
 herdr plugin link "$PWD"                 # link does NOT run [[build]]; build yourself
 ```
 
-- `herdr-confirm-close close` is the keybound action. It reads
+- `asconfirmclose close` is the keybound action. It reads
   `HERDR_PANE_ID` (falls back to `herdr pane current`) and either closes the
-  pane or opens the popup with `HCC_PANE_ID`, `HCC_PROCESS` and `HCC_CMDLINE`
+  pane or opens the popup with `ASCONFIRMCLOSE_PANE_ID`, `ASCONFIRMCLOSE_PROCESS` and `ASCONFIRMCLOSE_CMDLINE`
   in its environment.
-- `herdr-confirm-close prompt` is the popup UI (Bubble Tea v2).
+- `asconfirmclose prompt` is the popup UI (Bubble Tea v2).
 - Tests cover the classification rules, the config file, the CLI contract
   against a fake `herdr`, the popup model, and an end-to-end run of the built
   binary. `go test ./...` needs no running herdr.
@@ -134,7 +134,7 @@ herdr plugin link "$PWD"                 # link does NOT run [[build]]; build yo
 ## Demo recording
 
 `docs/demo.gif` is recorded with
-[herdr-demokit](https://github.com/asumaran/herdr-demokit): `herdr-demo
+[asdemokit](https://github.com/asumaran/asdemokit): `asdemo
 record` from the repo root replays `scripts/demo/keys.json` against an
 isolated herdr session described by `scripts/demo/scenario.sh`.
 

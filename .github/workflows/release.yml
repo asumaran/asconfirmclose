@@ -47,7 +47,7 @@ jobs:
             arch="${target#*/}"
             GOOS="$os" GOARCH="$arch" go build -trimpath \
               -ldflags "-s -w -X main.version=${GITHUB_REF_NAME}" \
-              -o "dist/herdr-confirm-close-${os}-${arch}" .
+              -o "dist/asconfirmclose-${os}-${arch}" .
           done
           ls -l dist
 

@@ -1,7 +1,7 @@
 # Compiled binary (built locally or in CI; attached to GitHub Releases as an asset).
-/herdr-confirm-close
-herdr-confirm-close-darwin-*
-herdr-confirm-close-linux-*
+/asconfirmclose
+asconfirmclose-darwin-*
+asconfirmclose-linux-*
 
 # Release staging
 /dist/

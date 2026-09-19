@@ -11,7 +11,7 @@ import (
 )
 
 // configFileName lives in HERDR_PLUGIN_CONFIG_DIR (created by herdr on
-// install/link; `herdr plugin config-dir asumaran.confirm-close` prints it).
+// install/link; `herdr plugin config-dir asumaran.asconfirmclose` prints it).
 const configFileName = "config.json"
 
 // Default popup geometry, in outer terminal cells (herdr draws the border).

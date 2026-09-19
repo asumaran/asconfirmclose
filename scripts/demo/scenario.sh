@@ -1,6 +1,6 @@
 # shellcheck shell=bash
-# scenario.sh — demo session for the README GIF, run by `herdr-demo record`
-# (asumaran/herdr-demokit). Sourced by the kit; the helpers used below
+# scenario.sh — demo session for the README GIF, run by `asdemo record`
+# (asumaran/asdemokit). Sourced by the kit; the helpers used below
 # (demo_*) come from it.
 #
 # Layout: one workspace on a personal repo with a bottom split, focused on
@@ -9,22 +9,22 @@
 # and confirming once. A second workspace exists so closing the last pane
 # lands somewhere rather than ending the session.
 
-DEMO_SESSION="confirmclosedemo"
+DEMO_SESSION="asconfirmclosedemo"
 DEMO_OUT="docs/demo.gif"
 DEMO_START_CWD="$HOME/Developer/aspage"
 
 SECOND_REPO="$HOME/Developer/asdev"
 
-# Build ./herdr-confirm-close stamped with the manifest version; the plugin
+# Build ./asconfirmclose stamped with the manifest version; the plugin
 # runs the binary from this checkout. demo_teardown restores the dev build.
 demo_build() {
   local version
   version="$(sed -n 's/^version = "\(.*\)"/\1/p' herdr-plugin.toml)"
-  go build -ldflags "-X main.version=v${version}" -o herdr-confirm-close .
+  go build -ldflags "-X main.version=v${version}" -o asconfirmclose .
 }
 
 demo_teardown() {
-  go build -o herdr-confirm-close . 2>/dev/null || true
+  go build -o asconfirmclose . 2>/dev/null || true
 }
 
 demo_setup() {
