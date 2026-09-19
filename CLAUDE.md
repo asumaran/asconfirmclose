@@ -48,7 +48,7 @@ paths (fixed ANSI colors, no adaptive colors). Files by concern:
 go build -o asconfirmclose .   # manifest runs ./asconfirmclose from the repo root
 go vet ./... && go test ./...
 scripts/pty-check.py ./asconfirmclose   # end-to-end TUI check on a pty (python3 + pyte)
-herdr plugin link ~/Developer/asconfirmclose   # link does NOT run [[build]]
+herdr plugin link "$PWD"   # link does NOT run [[build]]
 HERDR_PANE_ID=<pane> ./asconfirmclose close    # drive the action by hand
 ```
 

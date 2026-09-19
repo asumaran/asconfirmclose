@@ -119,7 +119,7 @@ keeps working with defaults.
 go build -o asconfirmclose .        # the manifest runs ./asconfirmclose
 go vet ./... && go test ./...
 scripts/pty-check.py ./asconfirmclose   # end-to-end TUI check on a pty (python3 + pyte)
-herdr plugin link "$PWD"                 # link does NOT run [[build]]; build yourself
+herdr plugin link "$PWD"   # link does NOT run [[build]]; build yourself
 ```
 
 - `asconfirmclose close` is the keybound action. It reads
