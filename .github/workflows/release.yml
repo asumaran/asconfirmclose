@@ -2,10 +2,12 @@ name: Attach binaries to Release
 
 # Releases are created from a tag (via scripts/release.sh, which tags and
 # publishes the GitHub release). When a release is published, this workflow
-# compiles one static binary per supported platform, stamps the version from
-# the tag, and uploads them as release assets so plugin installs
-# (scripts/fetch-binary.sh) can download the right one without a local Go
-# toolchain.
+# compiles the binaries, stamps the version from the tag, and uploads them as
+# release assets so plugin installs (scripts/fetch-binary.sh) can download one
+# without a local Go toolchain.
+#
+# This file is the same in every plugin of the family: the binary is named
+# after the repository and the targets come from the manifest's `platforms`.
 
 on:
   release:
@@ -16,7 +18,7 @@ permissions:
 
 jobs:
   build-and-attach:
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -36,18 +38,27 @@ jobs:
       - name: Test
         run: go test ./...
 
-      - name: Build all platforms
+      - name: Build the platforms the manifest declares
         env:
           CGO_ENABLED: '0'
         run: |
           set -eu
+          name="${GITHUB_REPOSITORY#*/}"
+          platforms="$(sed -n 's/^platforms = //p' herdr-plugin.toml)"
+          targets=""
+          case "$platforms" in *macos*) targets="$targets darwin/arm64 darwin/amd64" ;; esac
+          case "$platforms" in *linux*) targets="$targets linux/amd64 linux/arm64" ;; esac
+          if [ -z "$targets" ]; then
+            echo "no known platform in herdr-plugin.toml: ${platforms}" >&2
+            exit 1
+          fi
           mkdir -p dist
-          for target in darwin/arm64 darwin/amd64 linux/amd64 linux/arm64; do
+          for target in $targets; do
             os="${target%/*}"
             arch="${target#*/}"
             GOOS="$os" GOARCH="$arch" go build -trimpath \
               -ldflags "-s -w -X main.version=${GITHUB_REF_NAME}" \
-              -o "dist/asconfirmclose-${os}-${arch}" .
+              -o "dist/${name}-${os}-${arch}" .
           done
           ls -l dist
 
