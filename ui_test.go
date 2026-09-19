@@ -5,19 +5,19 @@ import (
 	"strings"
 	"testing"
 
-	tea "github.com/charmbracelet/bubbletea"
+	tea "charm.land/bubbletea/v2"
 )
 
-func key(s string) tea.KeyMsg {
+func key(s string) tea.KeyPressMsg {
 	switch s {
 	case "esc":
-		return tea.KeyMsg{Type: tea.KeyEsc}
+		return tea.KeyPressMsg{Code: tea.KeyEscape}
 	case "enter":
-		return tea.KeyMsg{Type: tea.KeyEnter}
+		return tea.KeyPressMsg{Code: tea.KeyEnter}
 	case "ctrl+c":
-		return tea.KeyMsg{Type: tea.KeyCtrlC}
+		return tea.KeyPressMsg{Code: 'c', Mod: tea.ModCtrl}
 	}
-	return tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune(s)}
+	return tea.KeyPressMsg{Code: []rune(s)[0], Text: s}
 }
 
 func newTestModel(closeErr error) (promptModel, *int) {
@@ -32,7 +32,7 @@ func newTestModel(closeErr error) (promptModel, *int) {
 func TestPromptViewShowsProcess(t *testing.T) {
 	m, _ := newTestModel(nil)
 	m.width = 64
-	view := m.View()
+	view := m.render()
 	for _, want := range []string{"Close pane?", "w1:p1", "claude", "claude --enable-auto-mode", "close", "keep"} {
 		if !strings.Contains(view, want) {
 			t.Errorf("view missing %q:\n%s", want, view)
@@ -42,14 +42,14 @@ func TestPromptViewShowsProcess(t *testing.T) {
 
 func TestPromptViewHidesCmdlineWhenSameAsProcess(t *testing.T) {
 	m := newPromptModel("w1:p1", "vim", "vim", nil)
-	if n := strings.Count(m.View(), "vim"); n != 1 {
-		t.Fatalf("expected process shown once, got %d:\n%s", n, m.View())
+	if n := strings.Count(m.render(), "vim"); n != 1 {
+		t.Fatalf("expected process shown once, got %d:\n%s", n, m.render())
 	}
 }
 
 func TestPromptViewUnknownProcess(t *testing.T) {
 	m := newPromptModel("w1:p1", unknownProcess, "", nil)
-	view := m.View()
+	view := m.render()
 	if !strings.Contains(view, "unknown process") || !strings.Contains(view, "could not inspect") {
 		t.Fatalf("view:\n%s", view)
 	}
@@ -78,8 +78,8 @@ func TestPromptYesClosesPane(t *testing.T) {
 	if !pm.done || cmd == nil {
 		t.Fatalf("expected quit after successful close: %+v", pm)
 	}
-	if !strings.Contains(pm.View(), "Close pane?") {
-		t.Fatalf("view after close: %q", pm.View())
+	if !strings.Contains(pm.render(), "Close pane?") {
+		t.Fatalf("view after close: %q", pm.render())
 	}
 }
 
@@ -132,7 +132,7 @@ func TestPromptCloseFailureShowsErrorThenKeeps(t *testing.T) {
 	if pm.err == nil || pm.closing || pm.done || cmd != nil {
 		t.Fatalf("expected error state: %+v", pm)
 	}
-	view := pm.View()
+	view := pm.render()
 	if !strings.Contains(view, "Could not close") || !strings.Contains(view, "pane_not_found") {
 		t.Fatalf("view:\n%s", view)
 	}
@@ -151,7 +151,7 @@ func TestPromptWindowSize(t *testing.T) {
 		t.Fatalf("size not stored: %+v", pm)
 	}
 	pm.cmdline = strings.Repeat("a", 200)
-	if !strings.Contains(pm.View(), "…") {
+	if !strings.Contains(pm.render(), "…") {
 		t.Fatal("long cmdline should be truncated")
 	}
 }

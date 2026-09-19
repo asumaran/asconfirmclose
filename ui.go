@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"strings"
 
-	tea "github.com/charmbracelet/bubbletea"
-	"github.com/charmbracelet/lipgloss"
+	tea "charm.land/bubbletea/v2"
+	"charm.land/lipgloss/v2"
 )
 
 var (
@@ -65,13 +65,13 @@ func (m promptModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		}
 		m.done = true
 		return m, tea.Quit
-	case tea.KeyMsg:
+	case tea.KeyPressMsg:
 		return m.handleKey(msg)
 	}
 	return m, nil
 }
 
-func (m promptModel) handleKey(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
+func (m promptModel) handleKey(msg tea.KeyPressMsg) (tea.Model, tea.Cmd) {
 	if m.closing {
 		// Ignore input while the close request is in flight.
 		return m, nil
@@ -96,7 +96,14 @@ func (m promptModel) handleKey(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
 	}
 }
 
-func (m promptModel) View() string {
+// View declares the frame. The popup is a handful of lines drawn inline: no
+// alt screen, no mouse.
+func (m promptModel) View() tea.View {
+	return tea.NewView(m.render())
+}
+
+// render builds the popup text.
+func (m promptModel) render() string {
 	var b strings.Builder
 	inner := m.width - 4 // one cell padding each side plus a little breathing room
 	if inner < 20 {

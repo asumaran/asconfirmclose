@@ -18,7 +18,8 @@ published library.
 ## Stack & layout
 
 Go single module, single `package main`, static binary, no CGO. TUI: Bubble
-Tea + lipgloss (fixed ANSI colors, no adaptive colors). Files by concern:
+Tea v2 + lipgloss v2, imported under their canonical `charm.land/<name>/v2`
+paths (fixed ANSI colors, no adaptive colors). Files by concern:
 
 - `main.go` — subcommands `close` and `prompt`, `-version`, env wiring.
 - `herdr.go` — `runner` interface, `execRunner` over `HERDR_BIN_PATH`, JSON
@@ -30,7 +31,7 @@ Tea + lipgloss (fixed ANSI colors, no adaptive colors). Files by concern:
   `plugin pane open` argv (popup placement, size, `HCC_*` env).
 - `config.go` — optional `config.json` in `HERDR_PLUGIN_CONFIG_DIR`
   (`ignore` list, popup size), strict decoding, defaults on error.
-- `ui.go` — `promptModel` (Bubble Tea), `runPrompt`.
+- `ui.go` — `promptModel` (Bubble Tea v2), `render`, `runPrompt`.
 - `scripts/fetch-binary.sh` — `[[build]]`: download release asset or
   `go build`. `scripts/release.sh` — tag + GitHub release.
 - `scripts/demo/` — the demo scenario (`scenario.sh` + `keys.json`) that
@@ -69,9 +70,12 @@ Keybinding (user config): `prefix+x` / `ctrl+alt+x` → `plugin_action`
 - **Keys**: only `y`/`Y` close. Everything else (n, Esc, Enter, q, ctrl+c…)
   keeps the pane. Input is ignored while the close request is in flight; a
   failed close shows the error and any key dismisses it.
-- **Terminal queries**: Bubble Tea's `init` triggers lipgloss's OSC 11
-  background query before the program starts; do not add adaptive colors or
-  other terminal queries at runtime (they race the input reader).
+- **Terminal queries**: the popup issues none of its own (fixed ANSI colors,
+  no `tea.RequestBackgroundColor`); do not add adaptive colors or other
+  terminal queries at runtime (they race the input reader).
+- **View**: `View()` returns a `tea.View` built from `render()`, which holds
+  the text and is what the tests assert on. The popup is drawn inline: no alt
+  screen, no mouse mode.
 - `HERDR_PANE_ID` is set by herdr for `contexts = ["pane"]` actions to the
   focused pane; `pane current` is only a fallback and, when run from inside a
   pane, returns the calling pane rather than the UI focus.

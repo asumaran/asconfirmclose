@@ -125,7 +125,7 @@ herdr plugin link "$PWD"                 # link does NOT run [[build]]; build yo
   `HERDR_PANE_ID` (falls back to `herdr pane current`) and either closes the
   pane or opens the popup with `HCC_PANE_ID`, `HCC_PROCESS` and `HCC_CMDLINE`
   in its environment.
-- `herdr-confirm-close prompt` is the popup UI (Bubble Tea).
+- `herdr-confirm-close prompt` is the popup UI (Bubble Tea v2).
 - Tests cover the classification rules, the config file, the CLI contract
   against a fake `herdr`, the popup model, and an end-to-end run of the built
   binary. `go test ./...` needs no running herdr.
