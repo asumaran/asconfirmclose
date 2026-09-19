@@ -118,6 +118,7 @@ keeps working with defaults.
 ```sh
 go build -o herdr-confirm-close .        # the manifest runs ./herdr-confirm-close
 go vet ./... && go test ./...
+scripts/pty-check.py ./herdr-confirm-close   # end-to-end TUI check on a pty (python3 + pyte)
 herdr plugin link "$PWD"                 # link does NOT run [[build]]; build yourself
 ```
 

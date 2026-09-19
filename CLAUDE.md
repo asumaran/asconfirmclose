@@ -47,6 +47,7 @@ paths (fixed ANSI colors, no adaptive colors). Files by concern:
 ```bash
 go build -o herdr-confirm-close .   # manifest runs ./herdr-confirm-close from the repo root
 go vet ./... && go test ./...
+scripts/pty-check.py ./herdr-confirm-close   # end-to-end TUI check on a pty (python3 + pyte)
 herdr plugin link ~/Developer/herdr-confirm-close   # link does NOT run [[build]]
 HERDR_PANE_ID=<pane> ./herdr-confirm-close close    # drive the action by hand
 ```
@@ -94,6 +95,12 @@ For a manual check against real herdr, split a throwaway pane, `herdr pane run
 the popup process can be dismissed with `pkill -f 'herdr-confirm-close prompt'`.
 Never point a manual run at a pane you care about: the idle path really closes
 it.
+
+For end-to-end verification without a TTY, `scripts/pty-check.py ./herdr-confirm-close`
+(python3 + `pyte`) spawns the binary on a pty, answers the terminal queries,
+replays keystrokes and asserts on pyte-rendered frames, in a throwaway sandbox
+(a logging herdr stub as `HERDR_BIN_PATH`, so no pane is ever closed). The v2 renderer repaints with scroll regions, which pyte ignores, so the
+driver forces a full redraw (pty resize + SIGWINCH) before reading a frame.
 
 ## Commits & branches
 
