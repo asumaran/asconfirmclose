@@ -1,6 +1,6 @@
 id = "asumaran.confirm-close"
 name = "confirm-close"
-version = "0.1.0"
+version = "0.2.0"
 min_herdr_version = "0.7.5"
 description = "Close the focused pane, asking first only when a process is running in it"
 platforms = ["linux", "macos"]
