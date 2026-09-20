@@ -1,3 +1,9 @@
+## v0.3.2 (2026-09-19)
+
+* refactor: share herdrBin with the family (116cd9c)
+* docs(dev): link the plugin from the checkout with $PWD (632760b)
+* ci: spend less time on CI and on releases (9471062)
+
 ## v0.3.1 (2026-09-19)
 
 * ci: share the release process with the rest of the family (4366fb9)
