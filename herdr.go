@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"os"
 	"os/exec"
 	"strings"
 )
@@ -14,16 +13,6 @@ import (
 // It is an interface so tests can drive the plugin without spawning herdr.
 type runner interface {
 	run(args ...string) ([]byte, error)
-}
-
-// herdrBin resolves the herdr executable. Plugin commands receive
-// HERDR_BIN_PATH from the running server; fall back to PATH lookup so the
-// binary is still usable by hand.
-func herdrBin() string {
-	if bin := os.Getenv("HERDR_BIN_PATH"); bin != "" {
-		return bin
-	}
-	return "herdr"
 }
 
 // execRunner runs the real herdr binary.
